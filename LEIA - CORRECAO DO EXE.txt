@@ -1,0 +1,51 @@
+CORRECAO DO EXECUTAVEL - MONITOR ARIBA
+======================================
+
+CAUSA DO ERRO ENCONTRADO
+------------------------
+O .env estava correto.
+
+O problema era o caminho usado pelo config.py.
+Na versao Python/VS Code, __file__ aponta para a pasta do projeto e funciona.
+No executavel PyInstaller --onefile, __file__ aponta para a pasta temporaria
+criada pelo PyInstaller (_MEI...). Assim o programa procurava o .env no lugar
+errado e informava que a configuracao estava faltando.
+
+A correcao desta versao faz o EXE usar a pasta de sys.executable, ou seja,
+a mesma pasta onde BrasmoAribaMonitor.exe esta instalado.
+
+Tambem foi corrigido instalar_tarefas.ps1:
+- antes apontava para .venv\Scripts\pythonw.exe;
+- agora aponta para BrasmoAribaMonitorSilent.exe.
+
+GERAR NO PC DE DESENVOLVIMENTO
+------------------------------
+1. Abra esta pasta no Windows.
+2. Confirme que .env e data\monitor.db estao aqui.
+3. Execute GERAR_PACOTE_FINAL.bat.
+4. O script compila os EXEs e TESTA o EXE antes de montar o pacote.
+5. Se aparecer ARIBA: OK e SAP SERVICE LAYER: OK, ele cria PACOTE_PENDRIVE.
+
+NO OUTRO PC
+-----------
+Copie PACOTE_PENDRIVE para a pasta do programa ou use-a para substituir os
+arquivos existentes.
+
+Antes de agendar, execute:
+04 - Testar Conexoes.bat
+
+Depois execute:
+02 - Executar Monitor Agora.bat
+
+Se ambos funcionarem, execute instalar_tarefas.bat como administrador.
+
+As tarefas passam a usar diretamente:
+BrasmoAribaMonitorSilent.exe run
+
+IMPORTANTE
+----------
+Nao refaca a validacao dos 90 dias.
+O monitor.db incluso ja contem a base existente e o funcionamento segue
+incrementalmente.
+
+FATURADO, EXPEDIDO e CANCELADO sao considerados encerrados.
